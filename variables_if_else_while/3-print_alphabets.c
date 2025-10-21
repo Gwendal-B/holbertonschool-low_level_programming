@@ -6,11 +6,15 @@
  */
 int main(void)
 {
-	char ch;
+	char min;
+	char maj;
 
-	for (ch = 'a'; ch <= 'z'; ch++)
-		putchar(ch);
-	
+	for (min = 'a'; min <= 'z'; min++)
+		putchar(min);
+
+	for (maj = 'A'; maj >= 'z'; maj++)
+		putchar(maj);
+
 	putchar ('\n');
 
 	return (0);

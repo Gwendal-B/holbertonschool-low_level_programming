@@ -8,11 +8,11 @@ int main(void)
 {
 	int single_digit;
 
-	for (single_digit = 0, single_digit <= 9, single_digit++)
+	for (single_digit = 0; single_digit <= 9; single_digit++)
 	{
 		putchar(single_digit + '0');
 
-		if (signle_digit != 9)
+		if (single_digit != 9)
 		{
 			putchar(',');
 			putchar(' ');
@@ -20,5 +20,6 @@ int main(void)
 	}
 
 	putchar('\n');
+
 	return (0);
 }

@@ -1,0 +1,8 @@
+#include "main.h"
+
+/**
+ * print_last_digit - Affiche le dernier chiffre d'un nombre
+ * @n: L'entier à évaluer
+ *
+ * Return: Le dernier chiffre
+ */

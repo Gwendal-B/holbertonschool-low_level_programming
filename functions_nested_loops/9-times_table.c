@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- *time_table - afficher les tables de multiplications de 1 a 9
+ *times_table - afficher les tables de multiplications de 1 a 9
  */
 void times_table(void)
 {

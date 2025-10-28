@@ -15,7 +15,7 @@ void rev_string(char *s)
 	{
 		len++;
 	}
-	for ( i = 0; i < len / 2; i++)
+	for (i = 0; i < len / 2; i++)
 	{
 		temporaire = s[i];
 		s[i] = s[len - 1 - i];

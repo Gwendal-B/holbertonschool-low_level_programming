@@ -1,0 +1,23 @@
+#include "main.h"
+
+/**
+ *print_rev - affiche une chaine de caractere a l'envers
+ *@s: pointe vers la chaine a afficher
+ *
+ *Return: R
+ */
+void print_rev(char *s)
+{
+	int len = 0;
+
+	while (s[len] != '\0')
+	{
+		len++;
+	}
+	while (len > 0)
+	{
+		len--;
+		_putchar(s[len]);
+	}
+	_putchar('\n');
+}

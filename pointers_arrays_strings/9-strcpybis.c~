@@ -5,18 +5,17 @@
  *@dest: pointe vers le tableau de destination
  *@src: pointe vers la chaine
  *
- *Retrun: pointeur vers dest
+ *Return: pointeur vers dest
  */
 char *_strcpy(char *dest, char *src)
 {
-	char *ptr = dest;
+	int a = 0;
 
-	while (*src)
+	while (src[a] != '\0')
 	{
-		*dest = *src;
-		dest++;
-		src++;
+		dest[a] = src[a];
+		a++;
 	}
-	*dest = '\0';
+	dest[a] = '\0';
 	return (ptr);
 }

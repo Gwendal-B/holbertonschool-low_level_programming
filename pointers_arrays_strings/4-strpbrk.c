@@ -1,9 +1,9 @@
 #include "main.h"
-#include <stddef.h>
+#include <stdio.h>
 
 /**
  * _strpbrk - cherche le premier caractère de s pesent dans accept
- * @s: chain a  parcourir
+ * @s: chaine a parcourir
  * @accept: ensemble de caractère a chercher
  *
  * Return: pointeur vers le premier caractere correspondant, ou NULL

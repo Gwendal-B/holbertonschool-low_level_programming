@@ -9,7 +9,7 @@
  *   - 1 si n est premier
  *   - 0 sinon
  */
-static int _is_prime_aide(int n, int i)
+int _is_prime_aide(int n, int i)
 {
 	if (i * i > n)
 		return (1);

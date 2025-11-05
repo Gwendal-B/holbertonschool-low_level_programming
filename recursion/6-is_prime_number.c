@@ -11,7 +11,7 @@
  */
 static int _is_prime_aide(int n, int i)
 {
-	if (i >= n)
+	if (i * i > n)
 		return (1);
 	if (n % i == 0)
 		return (0);

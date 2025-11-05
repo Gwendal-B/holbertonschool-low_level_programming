@@ -1,13 +1,11 @@
 #include "main.h"
 
 /**
+ * _strspn - obtient la longueur du prefixe d'une sous-chaine
+ * @s: chaine principale
+ * @accept: caracteres acceptes
  *
- *
- *
- *
- *
- *
- *
+ * Return: nombre d’octets initiaux de s qui appartiennent a accept
  */
 unsigned int _strspn(char *s, char *accept)
 {

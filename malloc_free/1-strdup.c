@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stdlib.h>
 
-/*
+/**
 * _strdup - duplique une chaîne de caractère
 * @str: chaîne a dupliquer
 *

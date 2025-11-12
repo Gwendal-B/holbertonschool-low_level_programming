@@ -38,16 +38,15 @@ void print_error(void)
  *
  * Return: 0
  */
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 	char *num1, *num2;
 	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
-	if (argc != 3)
-		print_error();
+	if (argc != 3 || !is_digit_str(num1) || !is_digit_str(num2))
+		return (print_error());
 	num1 = argv[1];
 	num2 = argv[2];
-	if (!is_digit_str(num1) || !is_digit_str(num2))
-		print_error();
 	len1 = strlen(num1);
 	len2 = strlen(num2);
 	result = calloc(len1 + len2, sizeof(int));

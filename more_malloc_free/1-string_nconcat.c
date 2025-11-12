@@ -1,6 +1,20 @@
 #include "main.h"
 #include <stdlib.h>
-#include <string.h>
+
+/**
+ * _strlen - calcule la longueur d'une chaine
+ * @s: la chaine a mesurer
+ *
+ * Return: la longueur de la chaine
+ */
+unsigned int _strlen(char *s)
+{
+	unsigned int len = 0;
+
+	while (s && s[len] != '\0')
+		len++;
+	return (len);
+}
 
 /**
  * string_nconcat - concatène s1 et s2 (n premiers caractères de s2)
@@ -20,11 +34,8 @@ char *string_nconcat(char *s1, char *s2, unsigned int n)
 	if (s2 == NULL)
 		s2 = "";
 
-	while (s1[len1] != '\0')
-		len1++;
-
-	while (s2[len2] != '\0')
-		len2++;
+	len1 = _strlen(s1);
+	len2 = _strlen(s2);
 
 	if (n > len2)
 		n = len2;

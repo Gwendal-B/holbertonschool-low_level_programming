@@ -41,7 +41,7 @@ void print_error(void)
 int main(int argc, char *argv[])
 {
 	char *num1, *num2;
-	unsigned int len1, len2, *result, i, j, carry, n1, n2, sum;
+	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
 	if (argc != 3)
 		print_error();
@@ -54,11 +54,11 @@ int main(int argc, char *argv[])
 	result = calloc(len1 + len2, sizeof(int));
 	if (!result)
 		return (1);
-	for (i = len1 - 1; i > 0; i--)/*Multiplication des chiffres*/
+	for (i = len1 - 1; i >= 0; i--)/*Multiplication des chiffres*/
 	{
 		n1 = num1[i] - '0';
 		carry = 0;
-		for (j = len2 - 1; j > 0; j--)
+		for (j = len2 - 1; j >= 0; j--)
 		{
 			n2 = num2[j] - '0';
 			sum = n1 * n2 + result[i + j + 1] + carry;

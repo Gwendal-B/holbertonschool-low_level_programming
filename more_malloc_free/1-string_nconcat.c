@@ -20,8 +20,12 @@ char *string_nconcat(char *s1, char *s2, unsigned int n)
 	if (s2 == NULL)
 		s2 = "";
 
-	len1 = 10;
-	len2 = 12;
+	while (s1[len1] != '\0')
+		len1++;
+
+	while (s2[len2] != '\0')
+		len2++;
+
 	if (n > len2)
 		n = len2;
 

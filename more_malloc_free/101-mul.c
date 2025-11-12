@@ -1,104 +1,84 @@
 #include "main.h"
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 
 /**
- * is_digit - Vérifie si une chaîne contient uniquement des chiffres
+ * is_digit_str - vérifie si une chaîne contient uniquement des chiffres
  * @s: chaîne à vérifier
- * Return: 1 si tous les caractères sont des chiffres, sinon 0
+ *
+ * Return: 1 si la chaîne contient uniquement des chiffres, sinon 0
  */
-int is_digit(char *s)
+int is_digit_str(char *s)
 {
-	int i = 0;
+	int i;
 
-	if (!s || s[0] == '\0')
-		return (0);
-	while (s[i])
+	for (i = 0; s[i]; i++)
 	{
-		if (s[i] < '0' || s[i] > '9')
+		if (!isdigit(s[i]))
 			return (0);
-		i++;
 	}
 	return (1);
 }
 
 /**
- * _strlen - Calcule la longueur d'une chaîne de caractères
- * @s: chaîne à mesurer
- * Return: longueur de la chaîne
- */
-int _strlen(char *s)
-{
-	int i = 0;
-
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
-
-/**
- * print_error - Affiche "Error" suivi d'un retour à la ligne et quitte (98)
+ * print_error - affiche "Error" et quitte avec le code 98
  */
 void print_error(void)
 {
-	char *err = "Error\n";
-	int i = 0;
-
-	while (err[i])
-	{
-		_putchar(err[i]);
-		i++;
-	}
+	printf("Error\n");
 	exit(98);
 }
 
 /**
- * main - Multiplie deux nombres positifs donnés en arguments
+ * main - multiplie deux nombres positifs passés en arguments
  * @argc: nombre d'arguments
- * @argv: tableau d'arguments
- * Return: 0 en cas de succès
+ * @argv: tableau des arguments
+ *
+ * Return: 0
  */
 int main(int argc, char *argv[])
 {
-	char *n1, *n2;
-	int len1, len2, *res, i, j, a, b, carry, sum, start = 0;
+	char *num1, *num2;
+	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
 	if (argc != 3)
 		print_error();
-	n1 = argv[1];
-	n2 = argv[2];
-	if (!is_digit(n1) || !is_digit(n2))
+	num1 = argv[1];
+	num2 = argv[2];
+	if (!is_digit_str(num1) || !is_digit_str(num2))
 		print_error();
-	len1 = _strlen(n1);
-	len2 = _strlen(n2);
-	res = malloc(sizeof(int) * (len1 + len2));
-	if (!res)
+	len1 = strlen(num1);
+	len2 = strlen(num2);
+	result = calloc(len1 + len2, sizeof(int));
+	if (!result)
 		return (1);
-	for (i = 0; i < len1 + len2; i++)
-		res[i] = 0;
-	for (i = len1 - 1; i >= 0; i--)
+	for (i = len1 - 1; i >= 0; i--)/*Multiplication des chiffres*/
 	{
-		a = n1[i] - '0';
+		n1 = num1[i] - '0';
 		carry = 0;
 		for (j = len2 - 1; j >= 0; j--)
 		{
-			b = n2[j] - '0';
-			sum = a * b + res[i + j + 1] + carry;
-			res[i + j + 1] = sum % 10;
+			n2 = num2[j] - '0';
+			sum = n1 * n2 + result[i + j + 1] + carry;
+			result[i + j + 1] = sum % 10;
 			carry = sum / 10;
 		}
-		res[i + j + 1] += carry;
+		result[i + j + 1] += carry;
 	}
-	while (start < len1 + len2 && res[start] == 0)
-		start++;
-	if (start == len1 + len2)
+	i = 0;/*Affichage du résultat*/
+	while (i < len1 + len2 && result[i] == 0)
+		i++; /*Ignorer les zéros de tête*/
+	if (i == len1 + len2) /* résultat = 0 */
 		_putchar('0');
 	else
-		for (i = start; i < len1 + len2; i++)
-			_putchar(res[i] + '0');
+	{
+		for (; i < len1 + len2; i++)
+			_putchar(result[i] + '0');
+	}
 	_putchar('\n');
-	free(res);
+	free(result);
 	return (0);
 }
 

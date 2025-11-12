@@ -25,12 +25,10 @@ int is_digit_str(char *s)
 /**
  * print_error - affiche "Error" et quitte avec le code 98
  */
-void print_error(int *ptr)
+void print_error(void)
 {
 	printf("Error\n");
-	if (ptr)
-		free(ptr);
-	exit(98)
+	exit(98);
 }
 
 /**

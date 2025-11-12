@@ -38,8 +38,7 @@ void print_error(void)
  *
  * Return: 0
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
 	char *num1, *num2;
 	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
@@ -79,5 +78,6 @@ int main(int argc, char *argv[])
 	}
 	_putchar('\n');
 	free(result);
+	fflush(stdout);
 	return (0);
 }

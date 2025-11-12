@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	char *num1, *num2;
 	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
-	if (argc != 3 || !is_digit_str(num1) || !is_digit_str(num2))
+	if (argc != 3)
 		print_error();
 	num1 = argv[1];
 	num2 = argv[2];
@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
 	for (i = len1 - 1; i >= 0; i--)/*Multiplication des chiffres*/
 	{
 		n1 = num1[i] - '0';
-		for (carry = j = len2 - 1; j >= 0; j--)
+		carry = 0;
+		for (j = len2 - 1; j >= 0; j--)
 		{
 			n2 = num2[j] - '0';
 			sum = n1 * n2 + result[i + j + 1] + carry;
@@ -66,9 +67,9 @@ int main(int argc, char *argv[])
 		}
 		result[i + j + 1] += carry;
 	}
-	/*Affichage du résultat*/
-	for (i = 0; i < len1 + len2 && result[i] == 0; i++)
-		; /*Ignorer les zéros de tête*/
+	i = 0;/*Affichage du résultat*/
+	while (i < len1 + len2 && result[i] == 0)
+		i++; /*Ignorer les zéros de tête*/
 	if (i == len1 + len2) /* résultat = 0 */
 		_putchar('0');
 	else
@@ -78,6 +79,5 @@ int main(int argc, char *argv[])
 	}
 	_putchar('\n');
 	free(result);
-	fflush(stdout);
 	return (0);
 }

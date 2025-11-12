@@ -45,23 +45,16 @@ int main(int argc, char *argv[])
 
 	if (argc != 3)
 		print_error();
-
 	num1 = argv[1];
 	num2 = argv[2];
-
 	if (!is_digit_str(num1) || !is_digit_str(num2))
 		print_error();
-
 	len1 = strlen(num1);
 	len2 = strlen(num2);
-
-        /*Tableau pour stocker le résultat*/
 	result = calloc(len1 + len2, sizeof(int));
 	if (!result)
 		return (1);
-
-        /*Multiplication des chiffres*/
-	for (i = len1 - 1; i >= 0; i--)
+	for (i = len1 - 1; i >= 0; i--)/*Multiplication des chiffres*/
 	{
 		n1 = num1[i] - '0';
 		carry = 0;
@@ -74,12 +67,9 @@ int main(int argc, char *argv[])
 		}
 		result[i + j + 1] += carry;
 	}
-
-      /*Affichage du résultat*/
-	i = 0;
+	i = 0;/*Affichage du résultat*/
 	while (i < len1 + len2 && result[i] == 0)
 		i++; /*Ignorer les zéros de tête*/
-
 	if (i == len1 + len2) /* résultat = 0 */
 		putchar('0');
 	else
@@ -88,7 +78,6 @@ int main(int argc, char *argv[])
 			putchar(result[i] + '0');
 	}
 	putchar('\n');
-
 	free(result);
 	return (0);
 }

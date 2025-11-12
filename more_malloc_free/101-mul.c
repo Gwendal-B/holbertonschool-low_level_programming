@@ -1,134 +1,209 @@
 #include "main.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+int trouver_longueur(char *str);
+char *creer_tableau_x(int size);
+char *ignorer_zero_initiaux(char *str);
+void obtenir_produit(char *produit, char *mult, int digit, int zeroes);
+void ajouter_nombres(char *produit_final, char *produit_suivant, int taille_suivant);
 
 /**
- * is_digit - Vérifie si une chaîne contient uniquement des chiffres
- * @s: chaîne à vérifier
- * Return: 1 si tous les caractères sont des chiffres, sinon 0
+ * trouver_longueur - Trouve la longueur d'une chaîne.
+ * @str: la chaîne à mesurer
+ *
+ * Return: la longueur de la chaîne
  */
-int is_digit(char *s)
+int trouver_longueur(char *str)
 {
-	int i = 0;
+    int len = 0;
 
-	if (!s || s[0] == '\0')
-		return (0);
-	while (s[i])
-	{
-		if (s[i] < '0' || s[i] > '9')
-			return (0);
-		i++;
-	}
-	return (1);
+    while (*str++)
+        len++;
+
+    return (len);
 }
 
 /**
- * _strlen - Calcule la longueur d'une chaîne de caractères
- * @s: chaîne à mesurer
- * Return: longueur de la chaîne
- */
-int _strlen(char *s)
-{
-	int i = 0;
-
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
-
-/**
- * print_error - Affiche "Error" suivi d'un retour à la ligne et quitte (98)
- */
-void print_error(void)
-{
-	char *err = "Error\n";
-	int i = 0;
-
-	while (err[i])
-	{
-		_putchar(err[i]);
-		i++;
-	}
-	exit(98);
-}
-
-/**
- * multiply_digits - Multiplie deux nombres positifs stockés en chaînes
- * @n1: premier nombre
- * @n2: deuxième nombre
- * @res: tableau pour stocker le résultat
- * @len1: longueur de n1
- * @len2: longueur de n2
- */
-void multiply_digits(char *n1, char *n2, int *res, int len1, int len2)
-{
-	int i, j, a, b, sum, carry;
-
-	for (i = len1 - 1; i >= 0; i--)
-	{
-		a = n1[i] - '0';
-		carry = 0;
-		for (j = len2 - 1; j >= 0; j--)
-		{
-			b = n2[j] - '0';
-			sum = a * b + res[i + j + 1] + carry;
-			res[i + j + 1] = sum % 10;
-			carry = sum / 10;
-		}
-		res[i + j + 1] += carry;
-	}
-}
-
-/**
- * print_result - Affiche le résultat contenu dans le tableau
- * @res: tableau contenant le résultat
+ * creer_tableau - Crée un tableau de caractères initialisé 
  * @size: taille du tableau
+ *
+ * Return: pointeur vers le tableau
  */
-void print_result(int *res, int size)
+char *creer_tableau_x(int size)
 {
-	int i = 0;
+    char *tab;
+    int i;
 
-	while (i < size && res[i] == 0)
-		i++;
-	if (i == size)
-		_putchar('0');
-	else
-		for (; i < size; i++)
-			_putchar(res[i] + '0');
-	_putchar('\n');
+    tab = malloc(sizeof(char) * size);
+    if (tab == NULL)
+        exit(98);
+
+    for (i = 0; i < size - 1; i++)
+        tab[i] = 'x';
+    tab[i] = '\0';
+
+    return (tab);
 }
 
 /**
- * main - Multiplie deux nombres positifs donnés en arguments
+ * ignorer_zero_initiaux - Avance dans la chaîne jusqu'au premier chiffre non nul
+ * @str: chaîne de chiffres
+ *
+ * Return: pointeur sur le premier chiffre non nul
+ */
+char *ignorer_zero_initiaux(char *str)
+{
+    while (*str && *str == '0')
+        str++;
+    return (str);
+}
+
+/**
+ * obtenir_chiffre - Convertit un caractère en chiffre
+ * @c: caractère à convertir
+ *
+ * Return: chiffre correspondant
+ */
+int obtenir_chiffre(char c)
+{
+    int digit = c - '0';
+    if (digit < 0 || digit > 9)
+    {
+        printf("Error\n");
+        exit(98);
+    }
+    return (digit);
+}
+
+/**
+ * obtenir_produit - Multiplie une chaîne de nombres par un chiffre
+ * @produit: buffer pour le résultat
+ * @mult: chaîne de nombres
+ * @chiffre: chiffre unique
+ * @zeroes: nombre de zéros initiaux
+ */
+void obtenir_produit(char *produit, char *mult, int digit, int zeroes)
+{
+    int len_mult, num, retenue = 0;
+
+    len_mult = trouver_longueur(mult) - 1;
+    mult += len_mult;
+
+    while (*produit)
+    {
+        *produit = 'x';
+        produit++;
+    }
+    produit--;
+
+    while (zeroes--)
+    {
+        *produit = '0';
+        produit--;
+    }
+
+    for (; len_mult >= 0; len_mult--, mult--, produit--)
+    {
+        if (*mult < '0' || *mult > '9')
+        {
+            printf("Error\n");
+            exit(98);
+        }
+        num = (*mult - '0') * digit + retenue;
+        *produit = (num % 10) + '0';
+        retenue = num / 10;
+    }
+
+    if (retenue)
+        *produit = (retenue % 10) + '0';
+}
+
+/**
+ * ajouter_nombres - Additionne deux tableaux représentant des nombres
+ * @produit_final: résultat cumulatif
+ * @produit_suivant: prochain produit à ajouter
+ * @taille_suivant: taille du prochain produit
+ */
+void ajouter_nombres(char *produit_final, char *produit_suivant, int taille_suivant)
+{
+    int num, retenue = 0;
+
+    while (*(produit_final + 1))
+        produit_final++;
+    while (*(produit_suivant + 1))
+        produit_suivant++;
+
+    for (; *produit_final != 'x'; produit_final--)
+    {
+        num = (*produit_final - '0') + (*produit_suivant - '0') + retenue;
+        *produit_final = (num % 10) + '0';
+        retenue = num / 10;
+        produit_suivant--;
+        taille_suivant--;
+    }
+
+    for (; taille_suivant >= 0 && *produit_suivant != 'x'; taille_suivant--)
+    {
+        num = (*produit_suivant - '0') + retenue;
+        *produit_final = (num % 10) + '0';
+        retenue = num / 10;
+        produit_final--;
+        produit_suivant--;
+    }
+
+    if (retenue)
+        *produit_final = (retenue % 10) + '0';
+}
+
+/**
+ * main - Multiplie deux nombres positifs
  * @argc: nombre d'arguments
  * @argv: tableau d'arguments
- * Return: 0 en cas de succès
+ *
+ * Return: toujours 0
  */
 int main(int argc, char *argv[])
 {
-	char *n1, *n2;
-	int *res, len1, len2, i;
+    char *produit_final, *produit_suivant;
+    int size, index, digit, zeroes = 0;
 
-	if (argc != 3)
-		print_error();
-	n1 = argv[1];
-	n2 = argv[2];
-	if (!is_digit(n1) || !is_digit(n2))
-		print_error();
+    if (argc != 3)
+    {
+        printf("Error\n");
+        exit(98);
+    }
 
-	len1 = _strlen(n1);
-	len2 = _strlen(n2);
-	res = malloc(sizeof(int) * (len1 + len2));
-	if (!res)
-		return (1);
+    if (*(argv[1]) == '0')
+        argv[1] = ignorer_zero_initiaux(argv[1]);
+    if (*(argv[2]) == '0')
+        argv[2] = ignorer_zero_initiaux(argv[2]);
+    if (*(argv[1]) == '\0' || *(argv[2]) == '\0')
+    {
+        printf("0\n");
+        return (0);
+    }
 
-	for (i = 0; i < len1 + len2; i++)
-		res[i] = 0;
+    size = trouver_longueur(argv[1]) + trouver_longueur(argv[2]);
+    produit_final = creer_tableau_x(size + 1);
+    produit_suivant = creer_tableau_x(size + 1);
 
-	multiply_digits(n1, n2, res, len1, len2);
-	print_result(res, len1 + len2);
+    for (index = trouver_longueur(argv[2]) - 1; index >= 0; index--)
+    {
+        digit = obtenir_chiffre(*(argv[2] + index));
+        obtenir_produit(produit_suivant, argv[1], digit, zeroes++);
+        ajouter_nombres(produit_final, produit_suivant, size - 1);
+    }
 
-	free(res);
-	return (0);
+    for (index = 0; produit_final[index]; index++)
+    {
+        if (produit_final[index] != 'x')
+            putchar(produit_final[index]);
+    }
+    putchar('\n');
+
+    free(produit_suivant);
+    free(produit_final);
+
+    return (0);
 }

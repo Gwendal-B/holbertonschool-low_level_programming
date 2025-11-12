@@ -28,7 +28,7 @@ int is_digit_str(char *s)
 void print_error(void)
 {
 	printf("Error\n");
-	exit(98);
+	return (98);
 }
 
 /**

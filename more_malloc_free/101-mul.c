@@ -25,7 +25,7 @@ int is_digit_str(char *s)
 /**
  * print_error - affiche "Error" et quitte avec le code 98
  */
-void print_error(void)
+void print_error(int *ptr)
 {
 	printf("Error\n");
 	if (ptr)

@@ -27,7 +27,7 @@ int is_digit_str(char *s)
  */
 void print_error(void)
 {
-	fprintf(stderr, "Error\n");
+	printf("Error\n");
 	exit(98);
 }
 
@@ -41,7 +41,7 @@ void print_error(void)
 int main(int argc, char *argv[])
 {
 	char *num1, *num2;
-	int len1, len2, *result, i, j, carry, n1, n2;
+	int len1, len2, *result, i, j, carry, n1, n2, sum;
 
 	if (argc != 3)
 		print_error();
@@ -61,9 +61,9 @@ int main(int argc, char *argv[])
 		for (j = len2 - 1; j >= 0; j--)
 		{
 			n2 = num2[j] - '0';
-			result[i + j + 1] += n1 * n2 + carry;
-			carry = result[i + j + 1] / 10;
-			result[i + j + 1] %= 10;
+			sum = n1 * n2 + result[i + j + 1] + carry;
+			result[i + j + 1] = sum % 10;
+			carry = sum / 10;
 		}
 		result[i + j + 1] += carry;
 	}

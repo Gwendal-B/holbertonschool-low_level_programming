@@ -22,7 +22,8 @@ char *create_buffer(const char *file)
 	buf = malloc(sizeof(char) * 1024);
 	if (buf == NULL)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
+		dprintf(STDERR_FILENO, 
+			"Error: Can't write to %s\n", file);
 		exit(99);
 	}
 	return (buf);

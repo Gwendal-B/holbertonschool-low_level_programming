@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 char *create_buffer(char *file);
 void close_file(int fd);

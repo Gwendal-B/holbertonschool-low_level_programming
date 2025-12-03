@@ -4,18 +4,53 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+char *create_buffer(const char *file);
+void close_file(int fd);
+
 /**
- * main - copies the content of a file to another file
- * @argc: number of arguments
- * @argv: array of arguments
+ * create_buffer - Allocates 1024 bytes for a buffer.
+ * @file: name of the file (for error message).
  *
- * Return: 0 on success, exits with code 97-100 on failure
+ * Return: pointer to the buffer.
+ */
+char *create_buffer(const char *file)
+{
+	char *buf;
+
+	buf = malloc(sizeof(char) * 1024);
+	if (buf == NULL)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
+		exit(99);
+	}
+	return (buf);
+}
+
+/**
+ * close_file - Closes a file descriptor and handles errors.
+ * @fd: File descriptor to close.
+ */
+void close_file(int fd)
+{
+	if (close(fd) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		exit(100);
+	}
+}
+
+/**
+ * main - Copies the content of a file to another file.
+ * @argc: Number of arguments.
+ * @argv: Array of arguments.
+ *
+ * Return: 0 on success.
  */
 int main(int argc, char *argv[])
 {
 	int fd_from, fd_to;
 	ssize_t r, w;
-	char buffer[1024];
+	char *buffer;
 
 	if (argc != 3)
 	{
@@ -23,10 +58,12 @@ int main(int argc, char *argv[])
 		exit(97);
 	}
 
+	buffer = create_buffer(argv[2]);
 	fd_from = open(argv[1], O_RDONLY);
 	if (fd_from == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		free(buffer);
 		exit(98);
 	}
 
@@ -34,18 +71,20 @@ int main(int argc, char *argv[])
 	if (fd_to == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-		close(fd_from);
+		free(buffer);
+		close_file(fd_from);
 		exit(99);
 	}
 
 	while ((r = read(fd_from, buffer, 1024)) > 0)
 	{
 		w = write(fd_to, buffer, r);
-		if (w != r)
+		if (w == -1 || w != r)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-			close(fd_from);
-			close(fd_to);
+			free(buffer);
+			close_file(fd_from);
+			close_file(fd_to);
 			exit(99);
 		}
 	}
@@ -53,23 +92,15 @@ int main(int argc, char *argv[])
 	if (r == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-		close(fd_from);
-		close(fd_to);
+		free(buffer);
+		close_file(fd_from);
+		close_file(fd_to);
 		exit(98);
 	}
 
-	if (close(fd_from) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_from);
-		close(fd_to);
-		exit(100);
-	}
-
-	if (close(fd_to) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_to);
-		exit(100);
-	}
+	free(buffer);
+	close_file(fd_from);
+	close_file(fd_to);
 
 	return (0);
 }

@@ -3,11 +3,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
-char *create_buffer(char *file);
-void close_file(int fd);
+
 
 /**
  * create_buffer - Allocates 1024 bytes for a buffer.
@@ -22,8 +19,7 @@ char *create_buffer(const char *file)
 	buf = malloc(sizeof(char) * 1024);
 	if (buf == NULL)
 	{
-		dprintf(STDERR_FILENO, 
-			"Error: Can't write to %s\n", file);
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
 		exit(99);
 	}
 	return (buf);
@@ -51,7 +47,8 @@ void close_file(int fd)
  */
 int main(int argc, char *argv[])
 {
-	int from, to, r, w;
+	int fd_from, fd_to;
+	ssize_t r, w;
 	char *buffer;
 
 	if (argc != 3)
@@ -61,36 +58,48 @@ int main(int argc, char *argv[])
 	}
 
 	buffer = create_buffer(argv[2]);
-	from = open(argv[1], O_RDONLY);
-	r = read(from, buffer, 1024);
-	to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	fd_from = open(argv[1], O_RDONLY);
+	if (fd_from == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		free(buffer);
+		exit(98);
+	}
 
-	do {
-		if (from == -1 || r == -1)
-		{
-			dprintf(STDERR_FILENO,
-				"Error: Can't read from file %s\n", argv[1]);
-			free(buffer);
-			exit(98);
-		}
+	fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fd_to == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+		free(buffer);
+		close_file(fd_from);
+		exit(99);
+	}
 
-		w = write(to, buffer, r);
-		if (to == -1 || w == -1)
+	while ((r = read(fd_from, buffer, 1024)) > 0)
+	{
+		w = write(fd_to, buffer, r);
+		if (w == -1 || w != r)
 		{
-			dprintf(STDERR_FILENO,
-				"Error: Can't write to %s\n", argv[2]);
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
 			free(buffer);
+			close_file(fd_from);
+			close_file(fd_to);
 			exit(99);
 		}
+	}
 
-		r = read(from, buffer, 1024);
-		to = open(argv[2], O_WRONLY | O_APPEND);
-
-	} while (r > 0);
+	if (r == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		free(buffer);
+		close_file(fd_from);
+		close_file(fd_to);
+		exit(98);
+	}
 
 	free(buffer);
-	close_file(from);
-	close_file(to);
+	close_file(fd_from);
+	close_file(fd_to);
 
 	return (0);
 }

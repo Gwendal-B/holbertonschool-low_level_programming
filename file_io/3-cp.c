@@ -1,28 +1,31 @@
 #include "main.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 /**
  * create_buffer - Allocates 1024 bytes for a buffer.
+ * @file: name of the file (for error message).
  *
- * Return: Pointer to the buffer.
+ * Return: pointer to the buffer.
  */
-char *create_buffer(void)
+char *create_buffer(const char *file)
 {
-	char *buffer;
+	char *buf;
 
-	buffer = malloc(1024);
-	if (buffer == NULL)
+	buf = malloc(sizeof(char) * 1024);
+	if (buf == NULL)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", "");
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
 		exit(99);
 	}
-
-	return (buffer);
+	return (buf);
 }
 
 /**
- * close_file - Closes a file descriptor.
- * @fd: The file descriptor to close.
+ * close_file - Closes a file descriptor and handles errors.
+ * @fd: File descriptor to close.
  */
 void close_file(int fd)
 {
@@ -36,7 +39,7 @@ void close_file(int fd)
 /**
  * main - Copies the content of a file to another file.
  * @argc: Number of arguments.
- * @argv: Array of argument strings.
+ * @argv: Array of arguments.
  *
  * Return: 0 on success.
  */
@@ -52,12 +55,12 @@ int main(int argc, char *argv[])
 		exit(97);
 	}
 
-	buffer = create_buffer();
-
+	buffer = create_buffer(argv[2]);
 	fd_from = open(argv[1], O_RDONLY);
 	if (fd_from == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		dprintf(STDERR_FILENO, 
+			"Error: Can't read from file %s\n", argv[1]);
 		free(buffer);
 		exit(98);
 	}
@@ -65,7 +68,8 @@ int main(int argc, char *argv[])
 	fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd_to == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+		dprintf(STDERR_FILENO, 
+			"Error: Can't write to %s\n", argv[2]);
 		free(buffer);
 		close_file(fd_from);
 		exit(99);
@@ -76,7 +80,8 @@ int main(int argc, char *argv[])
 		w = write(fd_to, buffer, r);
 		if (w == -1 || w != r)
 		{
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+			dprintf(STDERR_FILENO, 
+				"Error: Can't write to %s\n", argv[2]);
 			free(buffer);
 			close_file(fd_from);
 			close_file(fd_to);
@@ -86,7 +91,8 @@ int main(int argc, char *argv[])
 
 	if (r == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		dprintf(STDERR_FILENO, 
+			"Error: Can't read from file %s\n", argv[1]);
 		free(buffer);
 		close_file(fd_from);
 		close_file(fd_to);

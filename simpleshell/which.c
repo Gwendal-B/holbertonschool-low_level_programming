@@ -12,4 +12,7 @@ int main(int ac, char **av)
 	int i;
 
 	if (ac < 2)
-		
+	{
+		fprintf(stderr, "Usage: %s filename ...\n", av[0]);
+		return (1);
+	}

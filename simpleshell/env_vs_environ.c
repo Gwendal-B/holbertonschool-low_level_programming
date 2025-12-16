@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+extern char **environ; /* variable globale*/
 /**
  * main - compare env and environ
  * @ac: argument count

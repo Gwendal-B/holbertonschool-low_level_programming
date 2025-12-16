@@ -4,6 +4,11 @@
 #include <sys/wait.h>
 #include <string.h>
 
+/**
+ * main - super simple shell
+ *
+ * Return: Always 0
+ */
 int main(void)
 {
 	char *line = NULL;
